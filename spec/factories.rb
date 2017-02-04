@@ -42,4 +42,15 @@ FactoryGirl.define do
     subscription_type
     zip_code "02138"
   end
+
+  factory :condition do
+    day
+    max_temperature 100
+    min_temperature 30
+    mean_temperature 65
+    mean_humidity 50
+    mean_visibility 5
+    mean_wind_speed 12
+    precipitation 0
+  end
 end

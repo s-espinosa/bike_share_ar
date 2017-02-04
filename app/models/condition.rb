@@ -1,4 +1,4 @@
 class Condition < ApplicationRecord
-  belongs_to :date
+  belongs_to :day
   has_many :trips, through: :date
 end
