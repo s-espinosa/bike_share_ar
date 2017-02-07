@@ -24,7 +24,7 @@ describe 'Finding Things Lesson' do
       # This before block sets up variables that we can use within this describe block.
       # In the `it` blocks below, we can use `station_1` to refer to the Station that is created with below with a name of "Station 1".
 
-      xit 'can find an individual record by a specific parameter' do
+      it 'can find an individual record by a specific parameter' do
         # Assuming we have a few records in our database, we can use `.find_by` to find a particular record by an attribute.
         # Notice in the code below that we pass the hash `{name: "Station 1"}` as an argument to `.find_by`.
         # The example eliminates the curly braces ({}), but the argument is still a hash.
@@ -36,10 +36,10 @@ describe 'Finding Things Lesson' do
 
         # Use `.find_by` in the four lines below to make this test pass.
         # Be sure to find by different attributes.
-        actual_1    = nil
-        actual_2    = nil
-        actual_3    = nil
-        actual_city = nil
+        actual_1    = Station.find_by(name: "Station 1")
+        actual_2    = Station.find_by(dock_count: 15)
+        actual_3    = Station.find_by(installation_date: "2017/03/01")
+        actual_city = City.find_by(name: "Denver")
 
         # Do not change these expectations.
         expect(actual_1).to eq(@station_1)
@@ -50,7 +50,7 @@ describe 'Finding Things Lesson' do
     end
 
     describe '.find' do
-      xit 'can find an individual record using its id' do
+      it 'can find an individual record using its id' do
         # `.find` is similar to `.find_by`, but it automatically assumes that you're trying to find by an id.
         # In the example below we use `.find` and `.find_by` to find the record with the id of 1.
         # The only advantage here is that `.find` is shorter.
@@ -70,11 +70,11 @@ describe 'Finding Things Lesson' do
         expect(city).to eq(@albuquerque)
 
         # Use find in the following four lines to make the expectations below pass.
-        actual_1 = nil
-        actual_2 = nil
-        actual_3 = nil
-        actual_4 = nil
-        actual_5 = nil
+        actual_1 = Station.find(1)
+        actual_2 = Station.find(3)
+        actual_3 = Station.find(2)
+        actual_4 = City.find(2)
+        actual_5 = City.find(1)
 
         # Do not change these expectations.
         expect(actual_1).to eq(@station_1)
