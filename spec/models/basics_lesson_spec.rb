@@ -120,27 +120,3 @@ describe 'Finding Things Lesson' do
     # Read more about the reasons here: http://guides.rubyonrails.org/active_record_querying.html#array-conditions
   end
 end
-
-# Finding Things
-#     find_by
-#     find
-#     where
-#     where.not
-# Organizing Results
-#     order
-#     limit/offset
-#     group
-#     having
-#     pluck
-# Calculations
-#     average
-#     minimum
-#     maximum
-#     sum
-# Working With Multiple Tables
-#     joins
-#     left_outer_joins
-#     merge
-# Other Considerations
-#     includes
-#     find_or_create_by
