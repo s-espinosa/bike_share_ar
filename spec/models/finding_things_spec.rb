@@ -3,7 +3,7 @@ require 'rails_helper'
 describe 'Finding Things' do
   # This before block sets up variables that we can use within this describe block.
   # In the `it` blocks below, we can use `station_1` to refer to the Station that is created  below with a name of "Station 1".
-  before(:all) do
+  def data_prep
     @city_1      = City.create(name: "Denver")
     @city_2      = City.create(name: "Houston")
     @city_3      = City.create(name: "Brooklyn")
@@ -24,6 +24,7 @@ describe 'Finding Things' do
 
     describe '.find_by' do
       it 'can find an individual record by a specific parameter' do
+        data_prep
         # Assuming we have a few records in our database (created above in our before block), we can use `.find_by` to find a particular record by an attribute.
         # Notice in the code below that we pass the hash `{name: "Station 1"}` as an argument to `.find_by`.
         # The example eliminates the curly braces ({}), but the argument is still a hash.
@@ -51,6 +52,7 @@ describe 'Finding Things' do
 
     describe '.find' do
       it 'can find an individual record using its id' do
+        data_prep
         # `.find` is similar to `.find_by`, but it automatically assumes that you're trying to find by an id.
         # In the example below we use `.find` and `.find_by` to find the record with the id of 1.
         # The only advantage here is that `.find` is shorter.
@@ -66,7 +68,8 @@ describe 'Finding Things' do
 
         # Note that our it is a happy coincidence that our we have saved our first city (with an id of 1) to `@city_1`.
         # The `1` at the end of that instance variable has no impact on this.
-        city = City.find(4)
+        id   = @albuquerque.id
+        city = City.find(id)
         expect(city).to eq(@albuquerque)
 
         # Use `.find` in the following four lines to make the expectations below pass.
@@ -87,6 +90,7 @@ describe 'Finding Things' do
 
     describe '.where' do
       it 'can find a collection of records using a specific parameter' do
+        data_prep
         # Similar to `.find_by`, `.where` will take a hash argument specifying an attribute and a value.
         # Unlike `.find_by`, `.where` will return a collection of records.
         # For this exercise we need some stations that have attributes in common with those created above.
@@ -120,6 +124,7 @@ describe 'Finding Things' do
       end
 
       it 'can find a collection of record based on multiple parameters' do
+        data_prep
         # Where can also find a collection of records using multiple parameters.
         # As above we need some stations that have attributes in common with those created above.
         station_4 = @city_1.stations.create(name: "Station 4", dock_count: 10, installation_date: "2017/01/01")
@@ -153,6 +158,7 @@ describe 'Finding Things' do
 
     describe '.where.not' do
       it "can find a collection of records that don't match a specific parameter" do
+        data_prep
         # One pattern that you may find helpful is to chain `.not` onto `.where`.
         # This will allow you to find records without a particular characteristic.
         # Let's use the same setup as the `.where` exercise above.
@@ -192,6 +198,7 @@ describe 'Finding Things' do
 
     describe 'Pitfalls and things to remember' do
       it '.find_by will only find a single record' do
+        data_prep
         # One thing to be sure that you know: `.find_by` will return a single record, while `.where` will return a collection.
         # Below we create two new stations each with a dock count of 50.
         same_count_1 = @city_1.stations.create(name: "Same Count 1", dock_count: 50, installation_date: "2017/05/01")
@@ -206,7 +213,6 @@ describe 'Finding Things' do
         expected_2 = [same_count_1, same_count_2]
         actual_2   = Station.where(dock_count: 50)
         expect(actual_2).to eq(expected_2)
-
       end
     end
   end
@@ -219,6 +225,7 @@ describe 'Finding Things' do
 
     describe '.find_by' do
       it 'can find an individual record by a specific parameter' do
+        data_prep
         station = Station.find_by(name: "Station 1")
 
         expect(station).to eq(@station_1)
@@ -237,6 +244,34 @@ describe 'Finding Things' do
         expect(actual_city).to eq(@city_1)
       end
     end
+
+    describe '.where' do
+      it 'can find records with comparison operators' do
+        data_prep
+        # One advantage of pure string conditions over hash conditions is that they allow you to use comparison operators in a straightforward way.
+        actual_1 = Station.where('dock_count <= 10')
+        expected_1 = [@station_1]
+        expect(actual_1).to eq(expected_1)
+
+        # You can also use `AND` and `OR` in string conditions.
+        actual_2 = Station.where('10 < dock_count AND dock_count < 20')
+        expected_2 = [@station_2]
+        expect(actual_2).to eq(expected_2)
+
+        # Practice by using string conditions to select the stations described below.
+        # Select stations with a dock count less than 20
+        actual_3 = Station.where('dock_count < 20')
+        # Select stations with a dock count of at least 15
+        actual_4 = Station.where('dock_count >= 15')
+
+        # Do not change the expectations below.
+        expected_3 = [@station_1, @station_2]
+        expected_4 = [@station_2, @station_3]
+
+        expect(actual_3).to match_array(expected_3)
+        expect(actual_4).to match_array(expected_4)
+      end
+    end
   end
 
   describe 'Using placeholder conditions' do
@@ -244,6 +279,7 @@ describe 'Finding Things' do
     # Read more about the reasons here: http://guides.rubyonrails.org/active_record_querying.html#array-conditions
     describe '.where' do
       it 'can find a collection of records based on a specific parameter' do
+        data_prep
         # We'll use the same setup and example as the `.where` exercises above.
         station_4 = @city_1.stations.create(name: "Station 4", dock_count: 10, installation_date: "2017/01/01")
         station_5 = @city_1.stations.create(name: "Station 5", dock_count: 10, installation_date: "2017/03/01")
@@ -261,22 +297,42 @@ describe 'Finding Things' do
         actual_two_conditions   = Station.where('dock_count = ? AND installation_date = ?', 10, "2017/01/01")
         expect(actual_two_conditions).to eq(expected_two_conditions)
 
+        # We can also use this syntax to do comparisons between dates to select dates in a range.
+        # Notice that in order to use this comparison we have to create a date object.
+        expected_by_dates_1 = [@station_1, @station_2, station_4]
+        actual_by_dates_1   = Station.where('installation_date < ?', Date.parse('2017/02/15'))
+        expect(actual_by_dates_1).to match_array(expected_by_dates_1)
+
+        expected_by_dates_2 = [@station_2]
+        actual_by_dates_2   = Station.where('? < installation_date AND installation_date < ?', Date.parse('2017/01/15'), Date.parse('2017/02/15'))
+        expect(actual_by_dates_2).to eq(expected_by_dates_2)
+
         # Use `.where` with array conditions in the following four lines to make the expectations below pass.
+        # Stations in Denver
         actual_1 = Station.where("city_id = ?", @city_1.id)
+        # Stations with an installation date of January 1, 2017
         actual_2 = Station.where("installation_date = ?", "2017/01/01")
+        # Stations with an installation date of March 1, 2017
         actual_3 = Station.where("installation_date = ?", "2017/03/01")
+        # Stations with a dock count of 20
         actual_4 = Station.where("dock_count = ?", 20)
+        # Stations with an installation_date after January 15, 2017.
+        actual_4 = Station.where('installation_date > ?', Date.parse("2017/01/15"))
+        # Stations with an installation_date between February 15 and March 15, 2017.
+        actual_5 = Station.where('? < installation_date AND installation_date < ?', Date.parse('2017/02/17'), Date.parse('2017/03/17'))
 
         # Do not change these expectations.
         expected_1 = [@station_1, station_4, station_5, station_6]
         expected_2 = [@station_1, station_4]
         expected_3 = [@station_3, station_5, station_6]
-        expected_4 = [@station_3, station_6]
+        expected_4 = [@station_2, @station_3, station_5, station_6]
+        expected_5 = [@station_3, station_5, station_6]
 
         expect(actual_1).to match_array(expected_1)
         expect(actual_2).to match_array(expected_2)
         expect(actual_3).to match_array(expected_3)
         expect(actual_4).to match_array(expected_4)
+        expect(actual_5).to match_array(expected_5)
       end
     end
   end
