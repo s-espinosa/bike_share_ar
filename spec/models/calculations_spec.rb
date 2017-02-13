@@ -1,68 +1,83 @@
 require 'rails_helper'
 
 describe 'Calculations: ' do
-  describe 'count' do
-    it 'can count the number of records of a given table' do
-      # Count can be used to count the number of records on a table.
-      # In the example below, we call it directly on the model.
-      create_list(:city, 3)
-      expect(City.count).to eq(3)
+  before(:all) do
+    ###############################################################################################################
+    #################################################### COUNT ####################################################
+    ###############################################################################################################
 
-      # To practice, change the expectation below so that this test will pass.
-      create_list(:station, 4)
-      expect(Station.count).to eq(4)
+
+
+
+    ###### Section 1.1: `.count` ######
+        # Count can be used to count the number of records on a table.
+
+        # In the example below, we call `.count` directly on the City model.
+        # This will give us the total count of all Cities in our database.
+        @e11_1 = City.count
+
+        # Practice by counting the total number of Stations, Conditions, and Trips.
+        # binding.pry
+        @a11_1 = Station.count
+        @a11_2 = Condition.count
+        @a11_3 = Trip.count
+
+
+
+
+    ###### Section 1.2: `.count` with a condition ######
+
+
+        # Count can also be chained onto other methods.
+        # For example, if we wanted to see the number of stations in all of Denver,
+        # we could chain a `.count` call onto a `.where` call.
+        denver = City.find_by(name: "Denver")
+        @e12_1 = Station.where(city: denver).count
+
+        # Use `.count` to assign values to the variables below to make this test pass.
+        # The local variables below may help in one of the queries.
+        houston  = City.find_by(name: "Houston")
+        oakland  = City.find_by(name: "Oakland")
+        brooklyn = City.find_by(name: "Brooklyn")
+
+
+        # binding.pry
+        # Count of stations with 20 docks
+        @a12_1 = Station.where(dock_count: 20).count
+        # Count of stations in Brookyn
+        @a12_2 = Station.where(city: brooklyn).count
+        # Count of stations in Oakland
+        @a12_3 = Station.where(city: oakland).count
+        # Count of stations in Houston
+        @a12_4 = Station.where(city: houston).count
+        # Count of stations in Houston with 15 docks
+        @a12_5 = Station.where(city: houston, dock_count: 15).count
+        # Count of stations with less than 20 docks
+        @a12_6 = Station.where('dock_count < 20').count
+        # Count of stations with either 10 or 20 docks
+        @a12_7 = Station.where('dock_count = 10 OR dock_count = 20')
+
+
+  end
+
+  describe 'Section 1.0: Count' do
+    it 'Section 1.1' do
+      expect(@a11_1).to eq(Station.count)
+      expect(@a11_2).to eq(Condition.count)
+      expect(@a11_3).to eq(Trip.count)
     end
 
-    it 'can count records with a particular attribute' do
-      denver   = City.create(name: "Denver")
-      brooklyn = City.create(name: "Brooklyn")
-      station_1, station_2, station_3 = create_list(:station, 3, city: denver)
-      station_4, station_5, station_6 = create_list(:station, 2, city: brooklyn)
-
-      # Count can also be chained onto other methods.
-      # For example, if we wanted to see the number of stations in all of Denver,
-      # we could chain a `.count` call onto a `.where` call.
-      denver_station_count = Station.where(city: denver).count
-      expect(denver_station_count).to eq(3)
-
-      # Use `.count` to assign a value to the `brooklyn_station_count` below to make the test pass.
-      brooklyn_station_count = Station.where(city: brooklyn).count
-      expect(brooklyn_station_count).to eq(2)
-
-      # With the following setup for practice exercises...
-      oakland = City.create(name: "Oakland")
-      station_7, station_8 = create_list(:station, 2, city: denver, dock_count: 50)
-      station_9, station_10, station_11 = create_list(:station, 3, city: brooklyn, dock_count: 50)
-      station_12, station_13, station_14, station_15, station_16 = create_list(:station, 5, city: oakland, dock_count: 45)
-
-      # Use `.count` to assign values to the variables below to make this test pass.
-      # Count of stations with 50 docks
-      actual_1 = Station.where(dock_count: 50).count
-      # Count of stations in Brookyn
-      actual_2 = Station.where(city: brooklyn).count
-      # Count of stations in Oakland
-      actual_3 = Station.where(city: oakland).count
-      # Count of stations in Denver
-      actual_4 = Station.where(city: denver).count
-      # Count of stations in Denver with 50 docks
-      actual_5 = Station.where(city: denver, dock_count: 50).count
-      # Count of stations with less than 40 docks
-      actual_6 = Station.where('dock_count < 40').count
-
-      # Do not change the expectations below.
-      expected_1 = [station_7, station_8, station_9, station_10, station_11].count
-      expected_2 = [station_4, station_5, station_6, station_9, station_10, station_11].count
-      expected_3 = [station_12, station_13, station_14, station_15, station_16].count
-      expected_4 = [station_1, station_2, station_3, station_7, station_8].count
-      expected_5 = [station_7, station_8].count
-      expected_6 = [station_1, station_2, station_3, station_4, station_5, station_6].count
-
-      expect(actual_1).to eq(expected_1)
-      expect(actual_2).to eq(expected_2)
-      expect(actual_3).to eq(expected_3)
-      expect(actual_4).to eq(expected_4)
-      expect(actual_5).to eq(expected_5)
-      expect(actual_6).to eq(expected_6)
+    it 'Section 1.2' do
+      houston  = City.find_by(name: "Houston")
+      oakland  = City.find_by(name: "Oakland")
+      brooklyn = City.find_by(name: "Brooklyn")
+      expect(@a12_1).to eq(Station.where(dock_count: 20).count)
+      expect(@a12_2).to eq(Station.where(city: brooklyn).count)
+      expect(@a12_3).to eq(Station.where(city: oakland).count)
+      expect(@a12_4).to eq(Station.where(city: houston).count)
+      expect(@a12_5).to eq(Station.where(city: houston, dock_count: 15).count)
+      expect(@a12_6).to eq(Station.where('dock_count < 20').count)
+      expect(@a12_7).to eq(Station.where('dock_count = 10 OR dock_count = 20'))
     end
   end
 
