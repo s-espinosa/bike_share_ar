@@ -25,10 +25,11 @@ Currently, this project is in development. Ultimately the plan is to cover the f
     * having
     * pluck
 * Calculations
+    * count
+    * sum
     * average
     * minimum
     * maximum
-    * sum
 * Working With Multiple Tables
     * joins
     * left_outer_joins
