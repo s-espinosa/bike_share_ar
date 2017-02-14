@@ -1,20 +1,10 @@
 require 'rails_helper'
 
 describe 'Finding Things' do
-  # This before block sets up variables that we can use within this describe block.
-  # In the `it` blocks below, we can use `station_1` to refer to the Station that is created  below with a name of "Station 1".
   before(:all) do
-    @city_1      = City.create(name: "Denver")
-    @city_2      = City.create(name: "Houston")
-    @city_3      = City.create(name: "Brooklyn")
-    @albuquerque = City.create(name: "Albuquerque")
-
-    @station_1 = @city_1.stations.create(name: "Station 1", dock_count: 10, installation_date: "2017/01/01")
-    @station_2 = @city_2.stations.create(name: "Station 2", dock_count: 15, installation_date: "2017/02/01")
-    @station_3 = @city_3.stations.create(name: "Station 3", dock_count: 20, installation_date: "2017/03/01")
-  end
-
-  describe 'Using hash conditions' do
+    ###############################################################################################################
+    ############################################ USING HASH CONDITIONS ############################################
+    ###############################################################################################################
     # Each of the examples in this section will use Hash conditions.
     # This means that the arguments that we're going to pass each method will be a hash.
     # For example: when we call `User.find_by(name: 'Sal')`, the `name: 'Sal'` that is in parenthesis is a *hash*.
@@ -22,262 +12,354 @@ describe 'Finding Things' do
     # For now, don't worry too much about it. This will make more sense once you get to the 'Using string conditions' section.
     # That section will introduce another way to pass arguments.
 
-    describe '.find_by' do
-      xit 'can find an individual record by a specific parameter' do
-        # Assuming we have a few records in our database (created above in our before block), we can use `.find_by` to find a particular record by an attribute.
+
+
+
+    ###### Section 1.1: `.find_by` ######
+
+
+        # Assuming we have a few records in our database (created when we ran `rake db:test:prepare`),
+        # we can use `.find_by` to find a particular record by an attribute.
         # Notice in the code below that we pass the hash `{name: "Station 1"}` as an argument to `.find_by`.
         # The example eliminates the curly braces ({}), but the argument is still a hash.
         # The key of that hash specifies the attribute we will use to find a particular station.
         # The value of that hash specifies the value of the attribute in the database that we want to find.
-        station = Station.find_by(name: "Station 1")
 
-        expect(station).to eq(@station_1)
+        @e11_1 = Station.find_by(name: "Brooklyn Station 1")
 
-        # Use `.find_by` in the four lines below to make this test pass.
-        # Be sure to find by different attributes.
-        actual_1    = nil
-        actual_2    = nil
-        actual_3    = nil
-        actual_city = nil
+        # Use `.find_by` in the four lines below.
+        # Recommend that you uncomment the `binding.pry` below before answering.
+        # This will allow you to try your answers and see their results.
+        # binding.pry
+        # Unskip the test labeled Section 1.1 to check your answers.
 
-        # Do not change these expectations.
-        expect(actual_1).to eq(@station_1)
-        expect(actual_2).to eq(@station_2)
-        expect(actual_3).to eq(@station_3)
-        expect(actual_city).to eq(@city_1)
-      end
+        # Find the station with a dock_count of 5
+        @a11_1 = nil
+        # Find the station installed on December 1, 2016
+        @a11_2 = nil
+        # Find the City with a name of Los Angeles
+        @a11_3 = nil
+        # Find the Station in Los Angeles
+        @a11_4 = nil
 
-    end
 
-    describe '.find' do
-      xit 'can find an individual record using its id' do
+
+
+    ###### Section 1.2: `.find` ######
+
+
         # `.find` is similar to `.find_by`, but it automatically assumes that you're trying to find by an id.
         # In the example below we use `.find` and `.find_by` to find the record with the id of 1.
         # The only advantage here is that `.find` is shorter.
         # It's convenient that AR gives us this syntax since we will so frequently find our records by their id.
-        with_find    = Station.find(1)
-        with_find_by = Station.find_by(id: 1)
+        @e12_1 = Station.find_by(id: 1)
+        @e12_2 = Station.find(1)
+        # After the assignments above, `@e12_1` and `@e12_2` each reference the same record.
 
-        expect(with_find).to eq(with_find_by)
+        # Use find in the lines below.
+        # As above, recommend that you uncomment the `binding.pry` below before answering.
+        # binding.pry
+        # Unskip the test labeled Section 1.2 to check your answers.
+        # Find the Station with an id of 1
+        @a12_1 = nil
+        # Find the Station with an id of 3
+        @a12_2 = nil
+        # Find the Station with an id of 2
+        @a12_3 = nil
+        # Find the City with an id of 2
+        @a12_4 = nil
+        # Find the City with an id of 1
+        @a12_5 = nil
 
-        # We can also use this on the City model.
-        city = City.find(1)
-        expect(city).to eq(@city_1)
 
-        # Note that our it is a happy coincidence that our we have saved our first city (with an id of 1) to `@city_1`.
-        # The `1` at the end of that instance variable has no impact on this.
-        city = City.find(4)
-        expect(city).to eq(@albuquerque)
 
-        # Use `.find` in the following four lines to make the expectations below pass.
-        actual_1 = nil
-        actual_2 = nil
-        actual_3 = nil
-        actual_4 = nil
-        actual_5 = nil
 
-        # Do not change these expectations.
-        expect(actual_1).to eq(@station_1)
-        expect(actual_2).to eq(@station_3)
-        expect(actual_3).to eq(@station_2)
-        expect(actual_4).to eq(@city_2)
-        expect(actual_5).to eq(@city_1)
-      end
-    end
+    ###### Section 1.3: `.where` ######
 
-    describe '.where' do
-      xit 'can find a collection of records using a specific parameter' do
+
         # Similar to `.find_by`, `.where` will take a hash argument specifying an attribute and a value.
         # Unlike `.find_by`, `.where` will return a collection of records.
-        # For this exercise we need some stations that have attributes in common with those created above.
-        station_4 = @city_1.stations.create(name: "Station 4", dock_count: 10, installation_date: "2017/01/01")
-        station_5 = @city_1.stations.create(name: "Station 5", dock_count: 10, installation_date: "2017/03/01")
-        station_6 = @city_1.stations.create(name: "Station 6", dock_count: 20, installation_date: "2017/03/01")
-
-        # Since @station_1, station_4, and station_5 all have a dock_count of 10, we can use `.where` to return all of them.
+        # In the line below we use `.where` to find all stations with ten docks.
         # Notice we're using the same hash syntax, but getting an array like object back instead of a single instance.
-        expected = [@station_1, station_4, station_5]
-        actual   = Station.where(dock_count: 10)
-        expect(actual).to match_array(expected)
-
+        @e13_1 = Station.where(dock_count: 10)
 
         # Use `.where` in the following four lines to make the expectations below pass.
-        actual_1 = nil
-        actual_2 = nil
-        actual_3 = nil
-        actual_4 = nil
+        # Unskip the test labeled Section 1.3 to check your answers.
+        # The local variable below may help in one of the queries.
+        denver = City.find_by(name: "Denver")
 
-        # Do not change these expectations.
-        expected_1 = [@station_1, station_4, station_5, station_6]
-        expected_2 = [@station_1, station_4]
-        expected_3 = [@station_3, station_5, station_6]
-        expected_4 = [@station_3, station_6]
+        # binding.pry
+        # Find the Stations installed on January 1, 2017.
+        @a13_1 = nil
+        # Find the Stations installed on March 1, 2017.
+        @a13_2 = nil
+        # Find the Stations in Denver.
+        @a13_3 = nil
+        # Find the Stations with twenty docks.
+        @a13_4 = nil
 
-        expect(actual_1).to match_array(expected_1)
-        expect(actual_2).to match_array(expected_2)
-        expect(actual_3).to match_array(expected_3)
-        expect(actual_4).to match_array(expected_4)
-      end
 
-      xit 'can find a collection of record based on multiple parameters' do
+
+
+    ###### Section 1.4: `.where` with multiple conditions ######
+
+
         # Where can also find a collection of records using multiple parameters.
-        # As above we need some stations that have attributes in common with those created above.
-        station_4 = @city_1.stations.create(name: "Station 4", dock_count: 10, installation_date: "2017/01/01")
-        station_5 = @city_1.stations.create(name: "Station 5", dock_count: 10, installation_date: "2017/03/01")
-        station_6 = @city_1.stations.create(name: "Station 6", dock_count: 20, installation_date: "2017/03/01")
-
-        # If for example we wanted to find all of the stations with ten docks that were built in January of 2017, we could do the following.
-        # Notice that both 1 and 4 have these characteristics, but 5 does not because it was built in March.
-        expected = [@station_1, station_4]
-        actual   = Station.where(dock_count: 10, installation_date: "2017/01/01")
-        expect(actual).to match_array(expected)
+        # If for example we wanted to find all of the stations with ten docks that were built in January of 2017,
+        # we could do the following.
+        # Notice that we're still using hash conditions, but now we have two sets of keys/values.
+        @e14_1 = Station.where(dock_count: 10, installation_date: "2017/01/01")
 
         # Use `.where` with multiple conditions in the following four lines to make the expectations below pass.
+        # Unskip the test labeled Section 1.4 to check your answers.
+        # The local variable below may help in one of the queries.
+        oakland = City.find_by(name: "Oakland")
+
+        # binding.pry
         # 20 docks and installed in March
-        actual_1 = nil
+        @a14_1 = nil
         # Denver with 20 docks
-        actual_2 = nil
+        @a14_2 = nil
         # Installed in March with 10 docks.
-        actual_3 = nil
+        @a14_3 = nil
 
-        # Do not change these expectations.
-        expected_1 = [@station_3, station_6]
-        expected_2 = [station_6]
-        expected_3 = [station_5]
 
-        expect(actual_1).to match_array(expected_1)
-        expect(actual_2).to match_array(expected_2)
-        expect(actual_3).to match_array(expected_3)
-      end
-    end
 
-    describe '.where.not' do
-      xit "can find a collection of records that don't match a specific parameter" do
+
+    ###### Section 1.5: `.where.not` ######
+
+
         # One pattern that you may find helpful is to chain `.not` onto `.where`.
         # This will allow you to find records without a particular characteristic.
-        # Let's use the same setup as the `.where` exercise above.
-        station_4 = @city_1.stations.create(name: "Station 4", dock_count: 10, installation_date: "2017/01/01")
-        station_5 = @city_1.stations.create(name: "Station 5", dock_count: 10, installation_date: "2017/03/01")
-        station_6 = @city_1.stations.create(name: "Station 6", dock_count: 20, installation_date: "2017/03/01")
 
         # Let's assume that we wanted to find all the stations not in Denver.
         # One approach would be to find the city with a name of Denver,
         # Then to use that city to create my `.where.not` query.
-        # I expect that the stations returned fromt that query will be the stations in Houston and Brooklyn
-        # Note that this query would also work if I called `Station.where.not(city_id: 1)`,
-        # or, I could use `Station.where.not(city_id: denver.id)`
-        denver   = City.find_by(name: "Denver")
-        actual   = Station.where.not(city: denver)
-        expected = [@station_2, @station_3]
-        expect(actual).to match_array(expected)
+        # Note that this query would also work if I called `Station.where.not(city_id: 1)` (if Denver's id is 1),
+        # or I could use `Station.where.not(city_id: denver.id)`
+        denver = City.find_by(name: "Denver")
+        @e15_1 = Station.where.not(city: denver)
 
         # Use `.where.not` in the following four lines to make the expectations below pass.
-        actual_1 = nil
-        actual_2 = nil
-        actual_3 = nil
-        actual_4 = nil
+        # Unskip the test labeled Section 1.4 to check your answers.
+        # The local variable below may help in one of the queries.
+        houston = City.find_by(name: "Houston")
 
-        # Do not change these expectations.
-        expected_1 = [@station_2, @station_3, station_6]
-        expected_2 = [@station_1, @station_2, station_4]
-        expected_3 = [@station_1, @station_3, station_4, station_5, station_6]
-        expected_4 = [@city_1, @city_2, @city_3]
+        # binding.pry
+        # Stations with dock counts other than 10.
+        @a15_1 = nil
+        # Stations with installation dates other than March 1, 2017.
+        @a15_2 = nil
+        # Stations not in Houston.
+        @a15_3 = nil
+        # Cities that are not Albuquerque.
+        @a15_4 = nil
 
-        expect(actual_1).to eq(expected_1)
-        expect(actual_2).to eq(expected_2)
-        expect(actual_3).to eq(expected_3)
-        expect(actual_4).to eq(expected_4)
-      end
-    end
 
-    describe 'Pitfalls and things to remember' do
-      xit '.find_by will only find a single record' do
+
+
+    ###### Section 1.6: Pitfalls & Things to Remember ######
+
+
         # One thing to be sure that you know: `.find_by` will return a single record, while `.where` will return a collection.
-        # Below we create two new stations each with a dock count of 50.
-        same_count_1 = @city_1.stations.create(name: "Same Count 1", dock_count: 50, installation_date: "2017/05/01")
-        same_count_2 = @city_1.stations.create(name: "Same Count 2", dock_count: 50, installation_date: "2017/06/01")
-
         # If we use a find_by to find a station with a dock count of 50, it will only return one of the two stations.
-        expected_1 = same_count_1
-        actual_1   = Station.find_by(dock_count: 50)
-        expect(actual_1).to eq(expected_1)
+        @e16_1 = Station.find_by(dock_count: 15)
+        # `@e16_1` now holds a reference to a single Station, even though there are more than one station with a dock count of 15.
 
         # Meanwhile, `.where` returns a collection including both of these new stations.
-        expected_2 = [same_count_1, same_count_2]
-        actual_2   = Station.where(dock_count: 50)
-        expect(actual_2).to eq(expected_2)
+        @e16_2 = Station.where(dock_count: 15)
+        # `@e16_2` holds a collection of stations each with a dock count of 15.
 
-      end
-    end
-  end
 
-  describe 'Using string conditions' do
+
+
+    ###############################################################################################################
+    ########################################### USING STRING CONDITIONS ###########################################
+    ###############################################################################################################
+
+
     # The examples below mirror those above, but will use string parameters.
     # The remainder of these exercises will use hash conditions for the most part.
     # However, it is important that you be able to recognize string parameters, and not consider them an exotic syntax.
     # Note that the difference between those examples above and those below is the syntax being used in the arguments.
 
-    describe '.find_by' do
-      xit 'can find an individual record by a specific parameter' do
-        station = Station.find_by(name: "Station 1")
 
-        expect(station).to eq(@station_1)
+
+
+    ###### Section 2.1: `.find_by` with String Conditions ######
+
+        # String conditions include the attribute and the value in quotes.
+        # They also replace the `:` with `=` consistent with SQL syntax.
+        @e21_1 = Station.find_by("name = 'Brooklyn Station 1'")
+
 
         # Use `.find_by` with pure string conditions in the four lines below to make this test pass.
         # Be sure to find by different attributes.
-        actual_1    = nil
-        actual_2    = nil
-        actual_3    = nil
-        actual_city = nil
+        # binding.pry
+        # The station with a dock count of 10.
+        @a21_1 = nil
+        # The station with an installation date of December 1, 2016
+        @a21_2 = nil
+        # Denver
+        @a21_3 = nil
 
-        # Do not change these expectations.
-        expect(actual_1).to eq(@station_1)
-        expect(actual_2).to eq(@station_2)
-        expect(actual_3).to eq(@station_3)
-        expect(actual_city).to eq(@city_1)
-      end
-    end
-  end
 
-  describe 'Using placeholder conditions' do
+
+
+    ###### Section 2.2: `.where` with String Conditions ######
+
+
+        # One advantage of pure string conditions over hash conditions is that
+        # they allow you to use comparison operators in a straightforward way.
+        @e22_1 = Station.where('dock_count <= 10')
+
+        # You can also use `AND` and `OR` in string conditions.
+        @e22_2 = Station.where('10 < dock_count AND dock_count < 20')
+
+        # Practice by using string conditions to select the stations described below.
+        # binding.pry
+        # Select stations with a dock count less than 20
+        @a22_1 = nil
+        # Select stations with a dock count of at least 15
+        @a22_2 = nil
+        # Select stations with a dock count of either 15 or 10.
+        @a22_3 = nil
+
+
+
+
+    ###############################################################################################################
+    ######################################## USING PLACEHOLDER CONDITIONS #########################################
+    ###############################################################################################################
+
+
     # These examples are similar to those above but provide additional protection when accepting arguments from users.
     # Read more about the reasons here: http://guides.rubyonrails.org/active_record_querying.html#array-conditions
-    describe '.where' do
-      xit 'can find a collection of records based on a specific parameter' do
-        # We'll use the same setup and example as the `.where` exercises above.
-        station_4 = @city_1.stations.create(name: "Station 4", dock_count: 10, installation_date: "2017/01/01")
-        station_5 = @city_1.stations.create(name: "Station 5", dock_count: 10, installation_date: "2017/03/01")
-        station_6 = @city_1.stations.create(name: "Station 6", dock_count: 20, installation_date: "2017/03/01")
+
+
+
+
+    ###### Section 3.1: `.where` with Placeholder Conditions ######
+
 
         # The placeholder syntax is similar to string syntax in that it is closer to raw SQL.
-        # However, instead of hard coding the value of the attribute that we're looking for, we use a `?`, and then pass an array as a second argument.
-        expected = [@station_1, station_4, station_5]
-        actual   = Station.where('dock_count = ?', 10)
-        expect(actual).to match_array(expected)
+        # However, instead of hard coding the value of the attribute that we're looking for, we use a `?`,
+        # and then pass an array as a second argument.
+        @e31_1 = Station.where('dock_count = ?', 10)
 
         # We can also use `.where` with two conditions as with hash parameters.
         # In this case we pass the values for the separate conditions separated by a comma.
-        expected_two_conditions = [@station_1, station_4]
-        actual_two_conditions   = Station.where('dock_count = ? AND installation_date = ?', 10, "2017/01/01")
-        expect(actual_two_conditions).to eq(expected_two_conditions)
+        @e31_2 = Station.where('dock_count = ? AND installation_date = ?', 10, "2017/01/01")
+
+        # We can also use this syntax to do comparisons between dates to select dates in a range.
+        # Notice that in order to use this comparison we have to create a date object.
+        @e31_3 = Station.where('installation_date < ?', Date.parse('2017/02/15'))
+        @e31_4 = Station.where('? < installation_date AND installation_date < ?',
+                               Date.parse('2017/01/15'), Date.parse('2017/02/15'))
 
         # Use `.where` with array conditions in the following four lines to make the expectations below pass.
-        actual_1 = nil
-        actual_2 = nil
-        actual_3 = nil
-        actual_4 = nil
+        # The local variable below may help in one of the queries.
+        albuquerque = City.find_by(name: "Albuquerque")
 
-        # Do not change these expectations.
-        expected_1 = [@station_1, station_4, station_5, station_6]
-        expected_2 = [@station_1, station_4]
-        expected_3 = [@station_3, station_5, station_6]
-        expected_4 = [@station_3, station_6]
+        # binding.pry
+        # Stations with an installation date of January 1, 2017
+        @a31_1 = nil
+        # Stations with an installation date of March 1, 2017
+        @a31_2 = nil
+        # Stations in Albuquerque
+        @a31_3 = nil
+        # Stations with a dock count of 20
+        @a31_4 = nil
+        # Stations with an installation_date after January 15, 2017.
+        @a31_4 = nil
+        # Stations with an installation_date between February 15 and March 15, 2017.
+        @a31_5 = nil
+  end
 
-        expect(actual_1).to match_array(expected_1)
-        expect(actual_2).to match_array(expected_2)
-        expect(actual_3).to match_array(expected_3)
-        expect(actual_4).to match_array(expected_4)
-      end
+
+
+
+
+
+
+
+  ###############################################################################################################
+  ########################################### EXPECTATIONS & ANSWERS ############################################
+  ###############################################################################################################
+
+
+
+
+  describe 'Section 1.0: Hash Conditions' do
+    xit 'Section 1.1' do
+      expect(@a11_1).to eq(Station.find_by(dock_count: 5))
+      expect(@a11_2).to eq(Station.find_by(installation_date: "2016/12/01"))
+      expect(@a11_3).to eq(City.find_by(name: "Los Angeles"))
+      expect(@a11_4).to eq(Station.find_by(city: (@a1_3)))
+    end
+
+    xit 'Section 1.2' do
+      expect(@a12_1).to eq(Station.find(1))
+      expect(@a12_2).to eq(Station.find(3))
+      expect(@a12_3).to eq(Station.find(2))
+      expect(@a12_4).to eq(City.find(2))
+      expect(@a12_5).to eq(City.find(1))
+    end
+
+    xit 'Section 1.3' do
+      denver = City.find_by(name: "Denver")
+      expect(@a13_1).to eq(Station.where(installation_date: "2017/01/01"))
+      expect(@a13_2).to eq(Station.where(installation_date: "2017/03/01"))
+      expect(@a13_3).to eq(Station.where(city: denver))
+      expect(@a13_4).to eq(Station.where(dock_count: 20))
+    end
+
+    xit 'Section 1.4' do
+      oakland = City.find_by(name: "Oakland")
+      expect(@a14_1).to eq(Station.where(dock_count: 20, installation_date: "2017/03/01"))
+      expect(@a14_2).to eq(Station.where(city: oakland, dock_count: 20))
+      expect(@a14_3).to eq(Station.where(dock_count: 10, installation_date: "2017/03/01"))
+    end
+
+    xit 'Section 1.5' do
+      houston = City.find_by(name: "Houston")
+      expect(@a15_1).to eq(Station.where.not(dock_count: 10))
+      expect(@a15_2).to eq(Station.where.not(installation_date: "2017/03/01"))
+      expect(@a15_3).to eq(Station.where.not(city: houston))
+      expect(@a15_4).to eq(City.where.not(name: "Albuquerque"))
+    end
+  end
+
+  describe 'Section 2.0: String Conditions' do
+    xit 'Section 2.1' do
+      expect(@a21_1).to eq(Station.find_by("dock_count = 5"))
+      expect(@a21_2).to eq(Station.find_by("installation_date = '2016/12/01'"))
+      expect(@a21_3).to eq(City.find_by("name = 'Denver'"))
+    end
+
+    xit 'Section 2.2' do
+      expect(@a22_1).to eq(Station.where('dock_count < 20'))
+      expect(@a22_2).to eq(Station.where('dock_count >= 15'))
+      expect(@a22_3).to eq(Station.where('dock_count = 10 OR dock_count = 15'))
+    end
+  end
+
+  describe 'Section 3.0: Placeholder Conditions' do
+    xit 'Section 3.1' do
+      albuquerque = City.find_by(name: "Albuquerque")
+      a31_1 = Station.where("installation_date = ?", "2017/01/01")
+      a31_2 = Station.where("installation_date = ?", "2017/03/01")
+      a31_3 = Station.where("city_id = ?", albuquerque.id)
+      a31_4 = Station.where("dock_count = ?", 20)
+      a31_4 = Station.where('installation_date > ?', Date.parse("2017/01/15"))
+      a31_5 = Station.where('? < installation_date AND installation_date < ?',
+                             Date.parse('2017/02/17'), Date.parse('2017/03/17'))
+
+      expect(@a31_1).to eq(a31_1)
+      expect(@a31_2).to eq(a31_2)
+      expect(@a31_3).to eq(a31_3)
+      expect(@a31_4).to eq(a31_4)
+      expect(@a31_5).to eq(a31_5)
     end
   end
 end
