@@ -18,18 +18,18 @@ Currently, this project is in development. Ultimately the plan is to cover the f
     * find
     * where
     * where.not
-* Organizing Results
-    * order
-    * limit/offset
-    * group
-    * having
-    * pluck
 * Calculations
     * count
     * sum
     * average
     * minimum
     * maximum
+* Organizing Results
+    * order
+    * limit/offset
+    * group
+    * having
+    * pluck
 * Working With Multiple Tables
     * joins
     * left_outer_joins

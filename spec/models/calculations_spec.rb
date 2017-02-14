@@ -58,6 +58,30 @@ describe 'Calculations: ' do
         @a12_7 = Station.where('dock_count = 10 OR dock_count = 20')
 
 
+
+
+    ###############################################################################################################
+    ##################################################### SUM #####################################################
+    ###############################################################################################################
+
+
+
+
+
+
+
+
+    ###### Section 2.1: `.sum` ######
+
+
+        # Sum can be used to add the values in a column.
+        # Note that sum is not used *across* attributes.
+        # If you have two different columns you want to add together, there are other means to do that.
+        # Sum is used when you want values like the total yearly rainfall, assuming you have daily rainfall.
+        # Or if you wanted total revenue assuming you had sales figures for items sold.
+
+
+
   end
 
   describe 'Section 1.0: Count' do
@@ -84,6 +108,6 @@ describe 'Calculations: ' do
   describe 'average' do
     # As you might expect, average finds the average of a set of values.
     # It takes an attribute as a parameter in order to determine what it will average.
-    #
+    # Note that you use average to find the average of single column of values in
   end
 end
