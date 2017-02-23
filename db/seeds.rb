@@ -60,15 +60,17 @@ puts "Creating Trips"
 Day.all.each_with_index do |day, n|
   6.times do |j|
     s_count = Station.count
-    ss = Station.all[((j % s_count) + 1)]
-    es = Station.all[(s_count - (j % s_count))]
-    Trip.create(duration: (j + 120),
+    ss = Station.all[((n + j) % s_count)]
+    es = Station.all[(s_count - ((n + j) % s_count) - 1)]
+    st = SubscriptionType.all[(j % 2)]
+
+    Trip.create!(duration: (j + 120 * j),
                 start_date: day,
                 end_date: day,
                 start_station: ss,
                 end_station: es,
                 bike_id: j,
-                subscription_type_id: (j % 2),
+                subscription_type: st,
                 zip_code: "0213#{j}"
                )
   end

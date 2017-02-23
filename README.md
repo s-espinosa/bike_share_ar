@@ -24,6 +24,10 @@ Currently, this project is in development. Ultimately the plan is to cover the f
     * average
     * minimum
     * maximum
+* Relationships at the Model Level
+    * has_many
+    * has_many through
+    * belongs_to
 * Organizing Results
     * order
     * limit/offset

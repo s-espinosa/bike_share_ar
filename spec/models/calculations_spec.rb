@@ -2,6 +2,11 @@ require 'rails_helper'
 
 describe 'Calculations: ' do
   before(:all) do
+    # ActiveRecord has a number of methods to help you perform calculations.
+    # It's important to note that, while other  these methods generally return numbers (e.g. integers, floats, big decimals).
+    #
+    # That means that these methods will often be the last method in any chain of methods that you ca
+
     ###############################################################################################################
     #################################################### COUNT ####################################################
     ###############################################################################################################
@@ -10,6 +15,8 @@ describe 'Calculations: ' do
 
 
     ###### Section 1.1: `.count` ######
+
+
         # Count can be used to count the number of records on a table.
 
         # In the example below, we call `.count` directly on the City model.
@@ -18,8 +25,11 @@ describe 'Calculations: ' do
 
         # Practice by counting the total number of Stations, Conditions, and Trips.
         # binding.pry
+        # Count of all stations.
         @a11_1 = Station.count
+        # Count of all conditions.
         @a11_2 = Condition.count
+        # Count of all trips.
         @a11_3 = Trip.count
 
 
@@ -67,10 +77,6 @@ describe 'Calculations: ' do
 
 
 
-
-
-
-
     ###### Section 2.1: `.sum` ######
 
 
@@ -80,6 +86,85 @@ describe 'Calculations: ' do
         # Sum is used when you want values like the total yearly rainfall, assuming you have daily rainfall.
         # Or if you wanted total revenue assuming you had sales figures for items sold.
 
+        # For example, we can use the code below to capture the total precipitation for all days in our database.
+        @e21_1 = Condition.sum(:precipitation)
+
+        # Use `.sum` to find the following values.
+        # binding.pry
+        # The number of all docks in the system.
+        @a21_1 = Station.sum(:dock_count)
+        # The total amount of time that has been spent on any bike on a trip.
+        @a21_2 = Trip.sum(:duration)
+
+
+
+
+    ###### Section 2.2: `.sum` limited to a particular condition ######
+
+
+        # As with `.count`, `.sum` can be chained onto other methods.
+        # Say that we wanted to find the amount of rain on windy days.
+        # If we define windy days as days with mean wind speeds higher than 18, we can use the following:
+        @e22_1 = Condition.where('mean_wind_speed > 18').sum(:precipitation)
+
+        # Use `.sum` with a `.where` condition to find the following values.
+        # The following instance variables may be helpful.
+        mar_15             = Day.find_by(date: Date.parse("2017/03/15"))
+        mar_30             = Day.find_by(date: Date.parse("2017/03/30"))
+        brooklyn           = City.where(name: "Brooklyn")
+        brooklyn_station_1 = Station.where(city: brooklyn).first
+        # binding.pry
+
+        # The count of all docks in Brooklyn
+        @a22_1 = Station.where(city: brooklyn).sum(:dock_count)
+        # The total duration of all trips taken on March 15.
+        @a22_2 = Trip.where(start_date: mar_15).sum(:duration)
+        # The total duration of all trips taken starting at Brooklyn Station 1
+        @a22_3 = Trip.where(start_station: brooklyn_station_1).sum(:duration)
+        # The total duration of all trips started on March 15 starting at Brooklyn Station 1
+        @a22_4 = Trip.where(start_station: brooklyn_station_1, start_date: mar_15).sum(:duration)
+
+
+
+    ###############################################################################################################
+    ##################################################### AVERAGE #####################################################
+    ###############################################################################################################
+
+
+
+
+    ###### Section 3.1: `.average` ######
+
+
+    # As you might expect, average finds the average of a set of values.
+    # It takes an attribute as a parameter in order to determine what it will average.
+    # Note that you use average to find the average of single column of values in
+
+
+
+    # AVERAGE CONDITION STUFF
+    # AVERAGE DIFFERENCE BETWEEN MAX AND MIN TEMPS (using string conditions)
+    #
+
+
+
+
+    ###############################################################################################################
+    ################################################ MINIMUM & MAXIMUM ################################################
+    ###############################################################################################################
+
+
+
+
+    ###### Section 4.1: `.minimum` ######
+
+
+    # As you might expect, average finds the average of a set of values.
+
+
+
+
+    ###### Section 4.2: `.maximum` ######
 
 
   end
@@ -105,9 +190,33 @@ describe 'Calculations: ' do
     end
   end
 
-  describe 'average' do
-    # As you might expect, average finds the average of a set of values.
-    # It takes an attribute as a parameter in order to determine what it will average.
-    # Note that you use average to find the average of single column of values in
+  describe 'Section 2.0: Sum' do
+    it 'Section 2.1' do
+      expect(@a21_1).to eq(Station.sum(:dock_count))
+      expect(@a21_2).to eq(Trip.sum(:duration))
+    end
+
+    it 'Section 2.2' do
+      mar_15             = Day.find_by(date: Date.parse("2017/03/15"))
+      brooklyn           = City.where(name: "Brooklyn")
+      brooklyn_station_1 = Station.where(city: brooklyn).first
+      expect(@a22_1).to eq(Station.where(city: brooklyn).sum(:dock_count))
+      expect(@a22_2).to eq(Trip.where(start_date: mar_15).sum(:duration))
+      expect(@a22_3).to eq(Trip.where(start_station: brooklyn_station_1).sum(:duration))
+      expect(@a22_4).to eq(Trip.where(start_station: brooklyn_station_1, start_date: mar_15).sum(:duration))
+    end
+  end
+
+  describe 'Section 3.0: Average' do
+    it 'Section 3.1' do
+    end
+  end
+
+  describe 'Section 4.0: Minimum and Maximum' do
+    it 'Section 4.1' do
+    end
+
+    it 'Section 4.2' do
+    end
   end
 end
