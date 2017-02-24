@@ -110,7 +110,6 @@ describe 'Calculations: ' do
         # Use `.sum` with a `.where` condition to find the following values.
         # The following instance variables may be helpful.
         mar_15             = Day.find_by(date: Date.parse("2017/03/15"))
-        mar_30             = Day.find_by(date: Date.parse("2017/03/30"))
         brooklyn           = City.where(name: "Brooklyn")
         brooklyn_station_1 = Station.where(city: brooklyn).first
         # binding.pry
@@ -127,7 +126,7 @@ describe 'Calculations: ' do
 
 
     ###############################################################################################################
-    ##################################################### AVERAGE #####################################################
+    ##################################################### AVERAGE #################################################
     ###############################################################################################################
 
 
@@ -136,21 +135,52 @@ describe 'Calculations: ' do
     ###### Section 3.1: `.average` ######
 
 
-    # As you might expect, average finds the average of a set of values.
-    # It takes an attribute as a parameter in order to determine what it will average.
-    # Note that you use average to find the average of single column of values in
+        # As you might expect, average finds the average of a set of values.
+        # It takes an attribute as a parameter in order to determine what it will average.
+        # Note that you use average to find the average of single column of values on a table.
+        # For example, in order to find the average maximum_temperature you could run the following:
+        @e31_1 = Condition.average(:max_temperature)
+
+        # Use `.average` to find the following averages.
+        # The average minimum temperature.
+        @a31_1 = Condition.average(:min_temperature)
+        # The average mean temperature.
+        @a31_2 = Condition.average(:mean_temperature)
+        # The average mean wind speed.
+        @a31_3 = Condition.average(:mean_wind_speed)
+        # The average mean precipitation.
+        @a31_4 = Condition.average(:precipitation)
+        # The average dock cound for all stations.
+        @a31_5 = Station.average(:dock_count)
+        # The average duration for a trip.
+        @a31_6 = Trip.average(:duration)
 
 
 
-    # AVERAGE CONDITION STUFF
-    # AVERAGE DIFFERENCE BETWEEN MAX AND MIN TEMPS (using string conditions)
-    #
+
+    ###### Section 3.2: `.average` with other conditions ######
+
+
+        # As with count, you can chain average onto other methods.
+        # For example, if we wanted to find the average duration of rides that started at a particular station, we could do the following:
+        station = Station.find(1)
+        @e32_1 = Trip.where(start_station: station).average(:duration)
+
+        # Chain average onto other methods to find the following:
+        # Average number of docks at stations in Brooklyn.
+        brooklyn = City.find_by(name: "Brooklyn")
+        @a32_1 = Station.where(city: brooklyn).average(:dock_count)
+        # Average duration of rides started in Brooklyn.
+        @a32_2 = Trip.where(start_station: (Station.where(city: brooklyn))).average(:duration)
+        # Average duration of trips started on March 15.
+        mar_15 = Day.find_by(date: Date.parse("2017/03/15"))
+        @a32_3 = Trip.where(start_date: mar_15).average(:duration)
 
 
 
 
     ###############################################################################################################
-    ################################################ MINIMUM & MAXIMUM ################################################
+    ################################################ MINIMUM & MAXIMUM ############################################
     ###############################################################################################################
 
 
@@ -159,7 +189,7 @@ describe 'Calculations: ' do
     ###### Section 4.1: `.minimum` ######
 
 
-    # As you might expect, average finds the average of a set of values.
+    # As you might expect, minimum finds the minimum of a set of values.
 
 
 
@@ -197,8 +227,8 @@ describe 'Calculations: ' do
     end
 
     it 'Section 2.2' do
-      mar_15             = Day.find_by(date: Date.parse("2017/03/15"))
-      brooklyn           = City.where(name: "Brooklyn")
+      mar_15   = Day.find_by(date: Date.parse("2017/03/15"))
+      brooklyn = City.where(name: "Brooklyn")
       brooklyn_station_1 = Station.where(city: brooklyn).first
       expect(@a22_1).to eq(Station.where(city: brooklyn).sum(:dock_count))
       expect(@a22_2).to eq(Trip.where(start_date: mar_15).sum(:duration))
@@ -209,6 +239,20 @@ describe 'Calculations: ' do
 
   describe 'Section 3.0: Average' do
     it 'Section 3.1' do
+      expect(@a31_1).to eq(Condition.average(:min_temperature))
+      expect(@a31_2).to eq(Condition.average(:mean_temperature))
+      expect(@a31_3).to eq(Condition.average(:mean_wind_speed))
+      expect(@a31_4).to eq(Condition.average(:precipitation))
+      expect(@a31_5).to eq(Station.average(:dock_count))
+      expect(@a31_6).to eq(Trip.average(:duration))
+    end
+
+    it 'Section 3.2' do
+      mar_15   = Day.find_by(date: Date.parse("2017/03/15"))
+      brooklyn = City.where(name: "Brooklyn")
+      expect(@a32_1).to eq(Station.where(city: brooklyn).average(:dock_count))
+      expect(@a32_2).to eq(Trip.where(start_station: (Station.where(city: brooklyn))).average(:duration))
+      expect(@a32_3).to eq(Trip.where(start_date: mar_15).average(:duration))
     end
   end
 
