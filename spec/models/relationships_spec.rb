@@ -3,7 +3,7 @@ require 'rails_helper'
 describe "relationships" do
   it "can find all the trips with a given start date" do
     day = Day.first
-    expect(day.started_trips.count).to eq(3)
+    expect(day.started_trips.count).to eq(6)
   end
 
   it "can find dry days and wet days" do
@@ -12,8 +12,8 @@ describe "relationships" do
   end
 
   it "can find all trips that started on days with no rain and with rain" do
-    expect(Trip.dry_trips.count).to eq(12)
-    expect(Trip.wet_trips.count).to eq(78)
+    expect(Trip.dry_trips.count).to eq(24)
+    expect(Trip.wet_trips.count).to eq(156)
   end
 
   it "can calculate average mean humidity" do
@@ -45,7 +45,7 @@ describe "relationships" do
   end
 
   it "can find the trips taken on the hottest days" do
-    expect(Trip.hottest_trips.count).to eq(21)
+    expect(Trip.hottest_trips.count).to eq(42)
   end
 
   it "can find conditions with higher than average humidity and lower than average humidity" do
