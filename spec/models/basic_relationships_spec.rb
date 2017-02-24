@@ -23,7 +23,7 @@ describe 'Basic Relationships: ' do
     end
 
     it "Use a scope to find all the stations with dock counts of 15" do
-      expect(Station.docks_of_15_class).to eq(Station.where(dock_count: 15))
+      expect(Station.docks_of_15_scope).to eq(Station.where(dock_count: 15))
     end
 
     it "Use a class method to find all the stations in Brooklyn" do
@@ -39,7 +39,7 @@ describe 'Basic Relationships: ' do
 
   describe "Class calculations on the model" do
     # For the tests below, add methods to your models based on what you see in the expectations.
-    it "Calculates the average number of stations for all stations" do
+    it "Calculates the average number of docks for all stations" do
       expect(Station.average_dock_count).to eq(Station.average(:dock_count))
     end
 
@@ -74,16 +74,16 @@ describe 'Basic Relationships: ' do
       mar_15 = Day.find_by(date: Date.parse("2017/03/15"))
       mar_30 = Day.find_by(date: Date.parse("2017/03/30"))
 
-      expect(mar_15.average_trip_duration).to eq(mar_15.trips.average_duration)
-      expect(mar_30.average_trip_duration).to eq(mar_30.trips.average_duration)
+      expect(mar_15.average_trip_duration).to eq(mar_15.started_trips.average_duration)
+      expect(mar_30.average_trip_duration).to eq(mar_30.started_trips.average_duration)
     end
 
     it "Calculates the average duration of a trip started at a particular station" do
       station_1 = Station.all[0]
       station_2 = Station.all[1]
 
-      expect(station_1.average_trip_duration).to eq(station_1.trips.average_duration)
-      expect(station_2.average_trip_duration).to eq(station_2.trips.average_duration)
+      expect(station_1.average_trip_duration).to eq(station_1.started_trips.average_duration)
+      expect(station_2.average_trip_duration).to eq(station_2.started_trips.average_duration)
     end
   end
 end
