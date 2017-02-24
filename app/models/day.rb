@@ -14,4 +14,8 @@ class Day < ApplicationRecord
   def self.hottest_days
     joins(:condition).merge(Condition.hottest_conditions)
   end
+
+  def average_trip_duration
+    started_trips.average(:duration)
+  end
 end
