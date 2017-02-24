@@ -26,11 +26,11 @@ describe 'Calculations: ' do
         # Practice by counting the total number of Stations, Conditions, and Trips.
         # binding.pry
         # Count of all stations.
-        @a11_1 = Station.count
+        @a11_1 = nil
         # Count of all conditions.
-        @a11_2 = Condition.count
+        @a11_2 = nil
         # Count of all trips.
-        @a11_3 = Trip.count
+        @a11_3 = nil
 
 
 
@@ -53,19 +53,19 @@ describe 'Calculations: ' do
 
         # binding.pry
         # Count of stations with 20 docks
-        @a12_1 = Station.where(dock_count: 20).count
+        @a12_1 = nil
         # Count of stations in Brookyn
-        @a12_2 = Station.where(city: brooklyn).count
+        @a12_2 = nil
         # Count of stations in Oakland
-        @a12_3 = Station.where(city: oakland).count
+        @a12_3 = nil
         # Count of stations in Houston
-        @a12_4 = Station.where(city: houston).count
+        @a12_4 = nil
         # Count of stations in Houston with 15 docks
-        @a12_5 = Station.where(city: houston, dock_count: 15).count
+        @a12_5 = nil
         # Count of stations with less than 20 docks
-        @a12_6 = Station.where('dock_count < 20').count
+        @a12_6 = nil
         # Count of stations with either 10 or 20 docks
-        @a12_7 = Station.where('dock_count = 10 OR dock_count = 20')
+        @a12_7 = nil
 
 
 
@@ -92,9 +92,9 @@ describe 'Calculations: ' do
         # Use `.sum` to find the following values.
         # binding.pry
         # The number of all docks in the system.
-        @a21_1 = Station.sum(:dock_count)
+        @a21_1 = nil
         # The total amount of time that has been spent on any bike on a trip.
-        @a21_2 = Trip.sum(:duration)
+        @a21_2 = nil
 
 
 
@@ -115,13 +115,13 @@ describe 'Calculations: ' do
         # binding.pry
 
         # The count of all docks in Brooklyn
-        @a22_1 = Station.where(city: brooklyn).sum(:dock_count)
+        @a22_1 = nil
         # The total duration of all trips taken on March 15.
-        @a22_2 = Trip.where(start_date: mar_15).sum(:duration)
+        @a22_2 = nil
         # The total duration of all trips taken starting at Brooklyn Station 1
-        @a22_3 = Trip.where(start_station: brooklyn_station_1).sum(:duration)
+        @a22_3 = nil
         # The total duration of all trips started on March 15 starting at Brooklyn Station 1
-        @a22_4 = Trip.where(start_station: brooklyn_station_1, start_date: mar_15).sum(:duration)
+        @a22_4 = nil
 
 
 
@@ -143,17 +143,17 @@ describe 'Calculations: ' do
 
         # Use `.average` to find the following averages.
         # The average minimum temperature.
-        @a31_1 = Condition.average(:min_temperature)
+        @a31_1 = nil
         # The average mean temperature.
-        @a31_2 = Condition.average(:mean_temperature)
+        @a31_2 = nil
         # The average mean wind speed.
-        @a31_3 = Condition.average(:mean_wind_speed)
+        @a31_3 = nil
         # The average mean precipitation.
-        @a31_4 = Condition.average(:precipitation)
+        @a31_4 = nil
         # The average dock cound for all stations.
-        @a31_5 = Station.average(:dock_count)
+        @a31_5 = nil
         # The average duration for a trip.
-        @a31_6 = Trip.average(:duration)
+        @a31_6 = nil
 
 
 
@@ -169,12 +169,12 @@ describe 'Calculations: ' do
         # Chain average onto other methods to find the following:
         # Average number of docks at stations in Brooklyn.
         brooklyn = City.find_by(name: "Brooklyn")
-        @a32_1 = Station.where(city: brooklyn).average(:dock_count)
+        @a32_1 = nil
         # Average duration of rides started in Brooklyn.
-        @a32_2 = Trip.where(start_station: (Station.where(city: brooklyn))).average(:duration)
+        @a32_2 = nil
         # Average duration of trips started on March 15.
         mar_15 = Day.find_by(date: Date.parse("2017/03/15"))
-        @a32_3 = Trip.where(start_date: mar_15).average(:duration)
+        @a32_3 = nil
 
 
 
@@ -200,13 +200,13 @@ describe 'Calculations: ' do
   end
 
   describe 'Section 1.0: Count' do
-    it 'Section 1.1' do
+    xit 'Section 1.1' do
       expect(@a11_1).to eq(Station.count)
       expect(@a11_2).to eq(Condition.count)
       expect(@a11_3).to eq(Trip.count)
     end
 
-    it 'Section 1.2' do
+    xit 'Section 1.2' do
       houston  = City.find_by(name: "Houston")
       oakland  = City.find_by(name: "Oakland")
       brooklyn = City.find_by(name: "Brooklyn")
@@ -221,12 +221,12 @@ describe 'Calculations: ' do
   end
 
   describe 'Section 2.0: Sum' do
-    it 'Section 2.1' do
+    xit 'Section 2.1' do
       expect(@a21_1).to eq(Station.sum(:dock_count))
       expect(@a21_2).to eq(Trip.sum(:duration))
     end
 
-    it 'Section 2.2' do
+    xit 'Section 2.2' do
       mar_15   = Day.find_by(date: Date.parse("2017/03/15"))
       brooklyn = City.where(name: "Brooklyn")
       brooklyn_station_1 = Station.where(city: brooklyn).first
@@ -238,7 +238,7 @@ describe 'Calculations: ' do
   end
 
   describe 'Section 3.0: Average' do
-    it 'Section 3.1' do
+    xit 'Section 3.1' do
       expect(@a31_1).to eq(Condition.average(:min_temperature))
       expect(@a31_2).to eq(Condition.average(:mean_temperature))
       expect(@a31_3).to eq(Condition.average(:mean_wind_speed))
@@ -247,7 +247,7 @@ describe 'Calculations: ' do
       expect(@a31_6).to eq(Trip.average(:duration))
     end
 
-    it 'Section 3.2' do
+    xit 'Section 3.2' do
       mar_15   = Day.find_by(date: Date.parse("2017/03/15"))
       brooklyn = City.where(name: "Brooklyn")
       expect(@a32_1).to eq(Station.where(city: brooklyn).average(:dock_count))
@@ -257,10 +257,10 @@ describe 'Calculations: ' do
   end
 
   describe 'Section 4.0: Minimum and Maximum' do
-    it 'Section 4.1' do
+    xit 'Section 4.1' do
     end
 
-    it 'Section 4.2' do
+    xit 'Section 4.2' do
     end
   end
 end
