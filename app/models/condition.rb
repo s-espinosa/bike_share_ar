@@ -3,6 +3,12 @@ class Condition < ApplicationRecord
   has_many :started_trips, through: :day
   has_many :ended_trips, through: :day
 
+  scope :no_rain_scope, -> { where(precipitation: 0) }
+
+  def self.no_rain_class
+    where(precipitation: 0)
+  end
+
   def self.average_mean_humidity
     average(:mean_humidity)
   end

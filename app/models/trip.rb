@@ -16,4 +16,8 @@ class Trip < ApplicationRecord
   def self.hottest_trips
     joins(:start_date).merge(Day.hottest_days)
   end
+
+  def self.average_duration
+    average(:duration)
+  end
 end
