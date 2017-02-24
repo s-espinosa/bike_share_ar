@@ -28,6 +28,7 @@ Currently, this project is in development. Ultimately the plan is to cover the f
     * has_many
     * has_many through
     * belongs_to
+    * scopes
 * Organizing Results
     * order
     * limit/offset
